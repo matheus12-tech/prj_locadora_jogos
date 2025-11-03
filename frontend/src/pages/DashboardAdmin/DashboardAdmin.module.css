@@ -1,0 +1,157 @@
+:root {
+  --bg-dark: #171A21;
+  --bg-light: #1B1E29;
+  --purple: #6C5CE7;
+  --white: #FFFFFF;
+  --gray: #A0A0A0;
+  --transition: 0.3s ease;
+}
+
+/* ===== Layout Geral ===== */
+.container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-light);
+  color: var(--white);
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: 250px;
+  background-color: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  gap: 2rem;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--purple);
+  text-align: center;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--gray);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.link:hover {
+  color: var(--purple);
+}
+
+.ativacao {
+  color: var(--purple);
+  font-weight: bold;
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  background-color: var(--bg-light);
+}
+
+/* ===== Header ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.pesquisar {
+  background-color: var(--bg-dark);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: var(--white);
+  width: 250px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.pesquisar:focus {
+  border: 1px solid var(--purple);
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid var(--purple);
+}
+
+/* ===== Cards ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background-color: var(--bg-dark);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(108, 92, 231, 0.3);
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--purple);
+}
+
+.card p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--white);
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pesquisar {
+    width: 100%;
+  }
+}

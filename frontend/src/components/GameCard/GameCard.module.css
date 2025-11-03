@@ -1,0 +1,26 @@
+
+.card {
+  background: var(--bg-light);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 300px;
+  transition: var(--transition);
+  height: 400px;
+}
+
+.card img {
+  width: 100%;
+  display: block;
+}
+
+.cardInfo {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}

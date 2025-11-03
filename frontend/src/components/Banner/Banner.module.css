@@ -1,0 +1,35 @@
+.banner {
+  background: var(--purple);
+  border-radius: 12px;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  color: var(--white);
+}
+
+.bannerText h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.bannerText p {
+  margin-bottom: 15px;
+  color: var(--white);
+}
+
+.bannerText button {
+  padding: 10px 20px;
+  background: var(--white);
+  color: var(--purple);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.bannerText button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}

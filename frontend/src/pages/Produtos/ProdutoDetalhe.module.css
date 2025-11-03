@@ -1,0 +1,158 @@
+:root {
+  --bg-dark: #171A21;
+  --bg-light: #1B1E29;
+  --purple: #6C5CE7;
+  --white: #FFFFFF;
+  --gray: #A0A0A0;
+  --transition: 0.3s ease;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-dark);
+  color: var(--white);
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+  background: var(--bg-light);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.nav a {
+  display: block;
+  padding: 10px 0;
+  color: var(--gray);
+  text-decoration: none;
+  transition: var(--transition);
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.nav a:hover {
+  color: var(--white);
+  background: var(--purple);
+  padding-left: 10px;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.voltarBtn {
+  padding: 8px 16px;
+  background: var(--purple);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.voltarBtn:hover {
+  transform: translateY(-2px);
+  background: #7c6df0;
+}
+
+.produtoDetalhe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.imagemContainer {
+  flex: 1 1 400px;
+}
+
+.imagemContainer img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.info {
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.descricao {
+  font-size: 16px;
+  color: var(--gray);
+}
+
+.preco,
+.categoria,
+.estoque {
+  font-weight: bold;
+}
+
+.editarBtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: var(--purple);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.editarBtn:hover {
+  background: #7c6df0;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+  .produtoDetalhe {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .imagemContainer,
+  .info {
+    flex: 1 1 100%;
+  }
+}
