@@ -1,29 +1,42 @@
-import db from '../db.js';
+import db from "../db.js";
+import path from "path";
 
-// Cadastrar produto → apenas admin (rotas verificam isso)
+// ------------------- CADASTRAR PRODUTO -------------------
 export async function cadastrarProduto(req, res) {
-  const { nome_produto, descricao, preco, estoque, imagem, categoria_id } = req.body;
+  const { nome_produto, descricao, preco, estoque, categoria_id } = req.body;
+
+  // Se tiver upload de imagem, o caminho é gerado automaticamente
+  const imagem = req.file ? `/uploads/${req.file.filename}` : null;
 
   // Validação básica
   if (!nome_produto || !preco || !estoque || !categoria_id) {
-    return res.status(400).json({ error: 'Nome, preço, estoque e categoria são obrigatórios' });
+    return res
+      .status(400)
+      .json({ error: "Nome, preço, estoque e categoria são obrigatórios." });
   }
 
   try {
     const [result] = await db.query(
-      `INSERT INTO tb_produtos 
+      `
+      INSERT INTO tb_produtos 
       (nome_produto, descricao, preco, estoque, imagem, categoria_id) 
-      VALUES (?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?)
+      `,
       [nome_produto, descricao, preco, estoque, imagem, categoria_id]
     );
 
-    res.status(201).json({ message: 'Produto cadastrado com sucesso!', id_produto: result.insertId });
+    res.status(201).json({
+      message: "✅ Produto cadastrado com sucesso!",
+      id_produto: result.insertId,
+      imagem,
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ Erro ao cadastrar produto:", err);
+    res.status(500).json({ error: "Erro interno no servidor" });
   }
 }
 
-// Listar produtos → aberto para todos, inclui o nome da categoria
+// ------------------- LISTAR PRODUTOS -------------------
 export async function listarProdutos(req, res) {
   try {
     const [results] = await db.query(`
@@ -33,8 +46,17 @@ export async function listarProdutos(req, res) {
       ORDER BY p.nome_produto ASC
     `);
 
-    res.json(results);
+    // Ajusta a URL da imagem pra retornar o caminho completo do servidor
+    const produtosComUrl = results.map((p) => ({
+      ...p,
+      imagem: p.imagem
+        ? `http://localhost:3000${p.imagem}`
+        : null,
+    }));
+
+    res.json(produtosComUrl);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ Erro ao listar produtos:", err);
+    res.status(500).json({ error: "Erro interno no servidor" });
   }
 }

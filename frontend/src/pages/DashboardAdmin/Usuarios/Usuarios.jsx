@@ -1,17 +1,21 @@
-// src/pages/DashboardAdmin/Usuarios/Usuarios.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styles from "./Usuarios.module.css"; // Crie o CSS ou use inline se quiser
+import styles from "./Usuarios.module.css";
 
 const BASE_URL = "http://localhost:3000";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [motivo, setMotivo] = useState("");
+
+  const token = localStorage.getItem("token");
 
   const fetchUsuarios = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/usuarios`);
+      const res = await axios.get(`${BASE_URL}/usuarios`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUsuarios(res.data);
     } catch (err) {
       console.error("Erro ao buscar usuários:", err);
@@ -26,10 +30,12 @@ export default function Usuarios() {
 
   const alterarStatus = async (id, novoStatus) => {
     try {
-      await axios.patch(`${BASE_URL}/usuarios/${id}/status`, { status: novoStatus });
-      setUsuarios((prev) =>
-        prev.map((u) => (u.id_usuario === id ? { ...u, status: novoStatus } : u))
+      await axios.patch(
+        `${BASE_URL}/usuarios/${id}/status`,
+        { status: novoStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+      fetchUsuarios();
     } catch (err) {
       console.error("Erro ao alterar status:", err);
       alert("Não foi possível alterar o status do usuário.");
@@ -37,13 +43,16 @@ export default function Usuarios() {
   };
 
   const aplicarAdvertencia = async (id) => {
+    const motivoInput = prompt("Informe o motivo da advertência:");
+    if (!motivoInput) return;
+
     try {
-      await axios.patch(`${BASE_URL}/usuarios/${id}/advertencia`);
-      setUsuarios((prev) =>
-        prev.map((u) =>
-          u.id_usuario === id ? { ...u, advertencias: (u.advertencias || 0) + 1 } : u
-        )
+      await axios.post(
+        `${BASE_URL}/usuarios/${id}/advertencia`,
+        { motivo: motivoInput },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+      fetchUsuarios();
     } catch (err) {
       console.error("Erro ao aplicar advertência:", err);
       alert("Não foi possível aplicar a advertência.");
@@ -68,19 +77,19 @@ export default function Usuarios() {
         </thead>
         <tbody>
           {usuarios.map((u) => (
-            <tr key={u.id_usuario}>
-              <td>{u.id_usuario}</td>
+            <tr key={u.id}>
+              <td>{u.id}</td>
               <td>{u.nome}</td>
               <td>{u.email}</td>
               <td>{u.status}</td>
-              <td>{u.advertencias || 0}</td>
+              <td>{u.total_advertencias}</td>
               <td>
                 {u.status === "ativo" ? (
-                  <button onClick={() => alterarStatus(u.id_usuario, "banido")}>Banir</button>
+                  <button onClick={() => alterarStatus(u.id, "banido")}>Banir</button>
                 ) : (
-                  <button onClick={() => alterarStatus(u.id_usuario, "ativo")}>Desbanir</button>
+                  <button onClick={() => alterarStatus(u.id, "ativo")}>Desbanir</button>
                 )}
-                <button onClick={() => aplicarAdvertencia(u.id_usuario)}>⚠️ Advertir</button>
+                <button onClick={() => aplicarAdvertencia(u.id)}>⚠️ Advertir</button>
               </td>
             </tr>
           ))}

@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 
-const BASE_URL = "http://localhost:3000"; // Backend
+const BASE_URL = "http://localhost:3000";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -25,6 +25,13 @@ export default function Home() {
     buscarProdutos();
   }, []);
 
+  // Função para montar URL da imagem
+  const getImagemUrl = (imagem) => {
+    if (!imagem) return "https://placehold.co/300x180?text=Sem+Imagem";
+    if (imagem.startsWith("http")) return imagem;
+    return `${BASE_URL}${imagem.startsWith("/") ? imagem : `/${imagem}`}`;
+  };
+
   return (
     <div className={styles.container}>
       {/* Sidebar */}
@@ -32,43 +39,63 @@ export default function Home() {
         <div>
           <div className={styles.logo}>GAMESCOM</div>
           <nav className={styles.nav}>
+
             <NavLink
               to="/"
               className={({ isActive }) =>
-                isActive ? `${styles.link} ${styles.ativacao}` : styles.link
+                isActive ? styles.ativo : ""
               }
             >
               Home
             </NavLink>
+
             <NavLink
               to="/loja"
               className={({ isActive }) =>
-                isActive ? `${styles.link} ${styles.ativacao}` : styles.link
+                isActive ? styles.ativo : ""
               }
             >
               Loja
             </NavLink>
+
             <NavLink
               to="/eventos"
               className={({ isActive }) =>
-                isActive ? `${styles.link} ${styles.ativacao}` : styles.link
+                isActive ? styles.ativo : ""
               }
             >
               Eventos
             </NavLink>
+
             <NavLink
               to="/favoritos"
               className={({ isActive }) =>
-                isActive ? `${styles.link} ${styles.ativacao}` : styles.link
+                isActive ? styles.ativo : ""
               }
             >
               Favoritos
             </NavLink>
 
-            {/* Botão de Login */}
-            <button className={styles.loginBtn} onClick={() => navigate("/login")}>
-              Login
-            </button>
+            {user && (
+              <NavLink
+                to="/meus-alugueis"
+                className={({ isActive }) =>
+                  isActive ? styles.ativo : ""
+                }
+              >
+                Meus Aluguéis
+              </NavLink>
+            )}
+
+            {!user && (
+              <button
+                className={styles.loginBtn}
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </button>
+            )}
+
           </nav>
         </div>
 
@@ -79,13 +106,19 @@ export default function Home() {
 
       {/* Main */}
       <main className={styles.main}>
+
         {/* Header */}
         <header className={styles.header}>
-          <input type="text" placeholder="Pesquisar" className={styles.pesquisar} />
+          <input
+            type="text"
+            placeholder="Pesquisar"
+            className={styles.pesquisar}
+          />
+
           <div className={styles.usuario}>
             <span>{user?.nome || "Usuário"}</span>
             <img
-              src="https://via.placeholder.com/30"
+              src="https://via.placeholder.com/35"
               alt="avatar"
               className={styles.avatar}
             />
@@ -100,7 +133,10 @@ export default function Home() {
               <br /> E você acorda
             </h1>
             <p>Confira nossos produtos mais recentes!</p>
-            <button>veja multiuso</button>
+
+            <button onClick={() => navigate("/loja")}>
+              Ver Promoções
+            </button>
           </div>
           <div className={styles.bannerImg}></div>
         </section>
@@ -108,6 +144,7 @@ export default function Home() {
         {/* Produtos */}
         <section className={styles.games}>
           <h2>Produtos Disponíveis</h2>
+
           <div className={styles.cards}>
             {produtos.length > 0 ? (
               produtos.map((produto) => (
@@ -117,12 +154,17 @@ export default function Home() {
                   onClick={() => navigate(`/produtos/${produto.id_produto}`)}
                 >
                   <img
-                    src={produto.imagem || "https://via.placeholder.com/250x150"}
+                    src={getImagemUrl(produto.imagem)}
                     alt={produto.nome_produto}
+                    onError={(e) =>
+                      (e.target.src =
+                        "https://placehold.co/300x180?text=Imagem+Indisponível")
+                    }
                   />
+
                   <div className={styles.cardInfo}>
                     <p>{produto.nome_produto}</p>
-                    <span>${produto.preco}</span>
+                    <span>R$ {Number(produto.preco).toFixed(2)}</span>
                   </div>
                 </div>
               ))
@@ -131,6 +173,7 @@ export default function Home() {
             )}
           </div>
         </section>
+
       </main>
     </div>
   );

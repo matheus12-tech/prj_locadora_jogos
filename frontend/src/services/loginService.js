@@ -1,11 +1,17 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/auth'; // ajuste a porta se necessário
+const API_URL = 'http://localhost:3000/auth';
 
 export async function loginUser(email, senha) {
   try {
     const response = await axios.post(`${API_URL}/login`, { email, senha });
-    return response.data; // { message, token, role, nome }
+    const data = response.data;
+
+    // Garantindo que o ID seja número
+    return {
+      ...data,
+      id: Number(data.id),
+    };
   } catch (err) {
     if (err.response) {
       throw new Error(err.response.data.error);
@@ -18,7 +24,7 @@ export async function loginUser(email, senha) {
 export async function cadastroUser(nome, email, senha) {
   try {
     const response = await axios.post(`${API_URL}/cadastro`, { nome, email, senha });
-    return response.data; // { message }
+    return response.data;
   } catch (err) {
     if (err.response) {
       throw new Error(err.response.data.error);

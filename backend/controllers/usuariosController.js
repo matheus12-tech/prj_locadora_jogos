@@ -1,9 +1,8 @@
-// controllers/usuariosController.js
 import db from "../db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "seu_seguro_segredo_aqui"; // use .env na prática
+const JWT_SECRET = "seu_seguro_segredo_aqui"; // ⚠️ ideal colocar no .env
 
 // ------------------- LOGIN -------------------
 export async function login(req, res) {
@@ -11,7 +10,7 @@ export async function login(req, res) {
 
   try {
     const [rows] = await db.query(
-      "SELECT * FROM tb_usuarios WHERE email = ?",
+      "SELECT * FROM usuario_login WHERE email = ?",
       [email]
     );
 
@@ -21,20 +20,18 @@ export async function login(req, res) {
 
     const usuario = rows[0];
 
-    // Verifica senha
+    // Comparação de senha (bcrypt)
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) {
       return res.status(401).json({ error: "Senha incorreta" });
     }
 
-    // Verifica status
     if (usuario.status === "banido") {
       return res.status(403).json({ error: "Usuário banido" });
     }
 
-    // Login ok → gera token
     const token = jwt.sign(
-      { id_usuario: usuario.id_usuario, role: usuario.role },
+      { id: usuario.id, role: usuario.role },
       JWT_SECRET,
       { expiresIn: "8h" }
     );
@@ -42,16 +39,15 @@ export async function login(req, res) {
     res.json({
       token,
       usuario: {
-        id_usuario: usuario.id_usuario,
+        id: usuario.id,
         nome: usuario.nome,
         email: usuario.email,
         role: usuario.role,
         status: usuario.status,
-        advertencias: usuario.advertencias
-      }
+      },
     });
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao fazer login:", err);
     res.status(500).json({ error: "Erro no servidor" });
   }
 }
@@ -59,39 +55,66 @@ export async function login(req, res) {
 // ------------------- LISTAR USUÁRIOS -------------------
 export async function listarUsuarios(req, res) {
   try {
+    // Filtra pra não mostrar admin
     const [rows] = await db.query(
-      "SELECT id_usuario, nome, email, role, status, advertencias FROM tb_usuarios"
+      `SELECT 
+         u.id, 
+         u.nome, 
+         u.email, 
+         u.role, 
+         u.status,
+         COUNT(a.id_advertencia) AS advertencias
+       FROM usuario_login u
+       LEFT JOIN advertencias a ON u.id = a.id_usuario
+       WHERE u.role != 'admin'
+       GROUP BY u.id, u.nome, u.email, u.role, u.status`
     );
+
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Erro ao listar usuários:", err);
+    res.status(500).json({ error: "Erro interno no servidor" });
   }
 }
 
-// ------------------- BANIR / DESBANIR -------------------
+// ------------------- ATUALIZAR STATUS (banir/desbanir) -------------------
 export async function atualizarStatusUsuario(req, res) {
   const { id } = req.params;
-  const { status } = req.body; // 'ativo' ou 'banido'
+  const { status } = req.body; // "ativo" ou "banido"
 
   try {
-    await db.query("UPDATE tb_usuarios SET status = ? WHERE id_usuario = ?", [status, id]);
-    res.json({ message: `Usuário ${status}` });
+    const [result] = await db.query(
+      "UPDATE usuario_login SET status = ? WHERE id = ?",
+      [status, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    res.json({ message: `Usuário atualizado para status: ${status}` });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Erro ao atualizar status:", err);
+    res.status(500).json({ error: "Erro interno no servidor" });
   }
 }
 
 // ------------------- APLICAR ADVERTÊNCIA -------------------
 export async function aplicarAdvertencia(req, res) {
-  const { id } = req.params;
+  const { id } = req.params; // id do usuário que recebe advertência
+  const idAplicador = req.usuario?.id; // vem do token JWT
+  const motivo = "Advertência aplicada pelo administrador"; // pode virar input futuramente
 
   try {
     await db.query(
-      "UPDATE tb_usuarios SET advertencias = advertencias + 1 WHERE id_usuario = ?",
-      [id]
+      `INSERT INTO advertencias (id_usuario, id_aplicador, motivo)
+       VALUES (?, ?, ?)`,
+      [id, idAplicador, motivo]
     );
-    res.json({ message: "Advertência aplicada" });
+
+    res.json({ message: "Advertência aplicada com sucesso" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Erro ao aplicar advertência:", err);
+    res.status(500).json({ error: "Erro interno no servidor" });
   }
 }

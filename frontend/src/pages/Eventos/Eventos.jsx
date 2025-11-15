@@ -4,17 +4,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 
-const BASE_URL = "http://localhost:3000"; // removido /api
+const BASE_URL = "http://localhost:3000";
 
 export default function Eventos() {
   const [eventos, setEventos] = useState([]);
-  const { user } = useAuth(); // pega o usuário logado
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Buscar eventos do backend
   const buscarEventos = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/evento`); // GET /evento
+      const res = await axios.get(`${BASE_URL}/evento`);
       setEventos(res.data);
     } catch (err) {
       console.error("Erro ao buscar eventos:", err);
@@ -25,9 +24,21 @@ export default function Eventos() {
     buscarEventos();
   }, []);
 
+  // Função automática para pegar o ID correto
+  const pegarId = (ev) => {
+    return (
+      ev.id ||
+      ev.id_evento ||
+      ev.idEventos ||
+      ev.Id ||
+      ev._id ||
+      ev.ID ||
+      undefined
+    );
+  };
+
   return (
     <div className={styles.container}>
-      {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.logo}>GAMESCOM</div>
         <nav className={styles.nav}>
@@ -47,7 +58,6 @@ export default function Eventos() {
       </aside>
 
       <main className={styles.main}>
-        {/* Header */}
         <header className={styles.header}>
           <input type="text" placeholder="Pesquisar eventos..." className={styles.pesquisar} />
           <div className={styles.usuario}>
@@ -56,13 +66,11 @@ export default function Eventos() {
           </div>
         </header>
 
-        {/* Banner */}
         <section className={styles.banner}>
           <div className={styles.bannerContent}>
             <h1>Próximos Eventos</h1>
             <p>Confira os eventos imperdíveis do mês!</p>
 
-            {/* Botão só aparece para admin */}
             {user?.role === "admin" && (
               <button onClick={() => navigate("/cadastrar-evento")}>
                 Cadastrar Novo Evento
@@ -72,23 +80,38 @@ export default function Eventos() {
           <img src="https://via.placeholder.com/500x250" alt="banner" />
         </section>
 
-        {/* Lista de Eventos */}
         <section className={styles.eventos}>
           <h2>Eventos Cadastrados</h2>
           <div className={styles.cards}>
             {eventos.length > 0 ? (
-              eventos.map((ev) => (
-                <div key={ev.id} className={styles.card}>
-                  <div className={styles.cardInfo}>
-                    <h3>{ev.titulo}</h3>
-                    <p>{ev.descricao || "Sem descrição"}</p>
-                    <p>
-                      {ev.data_inicio} {ev.data_fim ? `- ${ev.data_fim}` : ""}
-                    </p>
-                    <p>Local: {ev.local || "Não informado"}</p>
+              eventos.map((ev) => {
+                console.log("EVENTO RECEBIDO:", ev);
+
+                const id = pegarId(ev);
+
+                return (
+                  <div
+                    key={id}
+                    className={styles.card}
+                    onClick={() => {
+                      if (!id) {
+                        alert("Este evento não possui ID!");
+                        return;
+                      }
+                      navigate(`/eventos/${id}`);
+                    }}
+                  >
+                    <div className={styles.cardInfo}>
+                      <h3>{ev.titulo}</h3>
+                      <p>{ev.descricao || "Sem descrição"}</p>
+                      <p>
+                        {ev.data_inicio} {ev.data_fim ? `- ${ev.data_fim}` : ""}
+                      </p>
+                      <p>Local: {ev.local || "Não informado"}</p>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <p>Nenhum evento cadastrado.</p>
             )}

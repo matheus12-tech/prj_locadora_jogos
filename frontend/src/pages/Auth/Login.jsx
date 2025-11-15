@@ -15,7 +15,9 @@ export default function Login() {
     e.preventDefault();
     try {
       const data = await loginUser(email, senha);
-      login(data); // usa o contexto, já limpa e salva tudo
+
+      // ⚡ id já convertido em número dentro do loginUser
+      login(data);
 
       if (data.role === "admin") {
         navigate("/admin");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "http://localhost:3000"; // Certifique-se que o backend está nessa porta
+const BASE_URL = "http://localhost:3000"; // porta do backend
 
 export default function CadastrarProduto() {
   const navigate = useNavigate();
@@ -13,9 +13,10 @@ export default function CadastrarProduto() {
     descricao: "",
     preco: "",
     estoque: "",
-    imagem: "",
     categoriaId: "",
   });
+  const [imagem, setImagem] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   // Buscar categorias
   useEffect(() => {
@@ -31,12 +32,11 @@ export default function CadastrarProduto() {
     buscarCategorias();
   }, []);
 
-  // Função para cadastrar produto (com token)
+  // Função para cadastrar produto
   const cadastrarProduto = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
-
     if (!token) {
       alert("Você precisa estar logado para cadastrar produtos!");
       navigate("/login");
@@ -44,22 +44,21 @@ export default function CadastrarProduto() {
     }
 
     try {
-      await axios.post(
-        `${BASE_URL}/produtos`,
-        {
-          nome_produto: produtoForm.nome,
-          descricao: produtoForm.descricao,
-          preco: parseFloat(produtoForm.preco),
-          estoque: parseInt(produtoForm.estoque),
-          imagem: produtoForm.imagem || "https://placehold.co/250x150",
-          categoria_id: parseInt(produtoForm.categoriaId),
+      // 🔹 Monta o FormData para enviar arquivos
+      const formData = new FormData();
+      formData.append("nome_produto", produtoForm.nome);
+      formData.append("descricao", produtoForm.descricao);
+      formData.append("preco", produtoForm.preco);
+      formData.append("estoque", produtoForm.estoque);
+      formData.append("categoria_id", produtoForm.categoriaId);
+      if (imagem) formData.append("imagem", imagem);
+
+      await axios.post(`${BASE_URL}/produtos`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 🔑 ENVIA TOKEN JWT
-          },
-        }
-      );
+      });
 
       alert("✅ Produto cadastrado com sucesso!");
 
@@ -68,9 +67,10 @@ export default function CadastrarProduto() {
         descricao: "",
         preco: "",
         estoque: "",
-        imagem: "",
         categoriaId: "",
       });
+      setImagem(null);
+      setPreview(null);
 
       navigate("/loja");
     } catch (err) {
@@ -81,8 +81,16 @@ export default function CadastrarProduto() {
     }
   };
 
-  const imagemPreview =
-    produtoForm.imagem || "https://placehold.co/250x150?text=Preview";
+  // Preview da imagem antes de enviar
+  const handleImagemChange = (e) => {
+    const file = e.target.files[0];
+    setImagem(file);
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setPreview(null);
+    }
+  };
 
   return (
     <div style={containerStyle}>
@@ -131,19 +139,30 @@ export default function CadastrarProduto() {
           style={inputStyle}
         />
 
+        {/* Campo de upload de imagem */}
         <input
-          type="text"
-          placeholder="URL da imagem"
-          value={produtoForm.imagem}
-          onChange={(e) =>
-            setProdutoForm({ ...produtoForm, imagem: e.target.value })
-          }
+          type="file"
+          accept="image/*"
+          onChange={handleImagemChange}
           style={inputStyle}
         />
 
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
-          <img src={imagemPreview} alt="Preview" width={250} style={imgPreviewStyle} />
-        </div>
+        {preview && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            <img
+              src={preview}
+              alt="Preview"
+              width={250}
+              style={imgPreviewStyle}
+            />
+          </div>
+        )}
 
         <select
           value={produtoForm.categoriaId}
@@ -177,7 +196,7 @@ export default function CadastrarProduto() {
   );
 }
 
-// Estilos
+// ----------------- ESTILOS -----------------
 const containerStyle = {
   backgroundColor: "#1B1E29",
   color: "white",

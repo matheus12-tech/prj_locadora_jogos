@@ -1,4 +1,4 @@
-import express from "express";
+/*import express from "express";
 import { login, cadastrarUsuario } from "../controllers/authController.js";
 import jwt from "jsonwebtoken";
 
@@ -31,4 +31,21 @@ router.get("/validar", (req, res) => {
   });
 });
 
+export default router;*/
+
+import express from "express";
+import { login, cadastrarUsuario, validarToken } from "../controllers/authController.js";
+
+const router = express.Router();
+
+// Login unificado (usuário ou admin)
+router.post("/login", login);
+
+// Cadastro de usuário comum
+router.post("/cadastro", cadastrarUsuario);
+
+// Validação de token (admin ou usuário)
+router.get("/validar", validarToken);
+
 export default router;
+

@@ -11,17 +11,22 @@ import Login from "./pages/Auth/Login";
 import Usuarios from "./pages/DashboardAdmin/Usuarios/Usuarios";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
+import Carrinho from "./pages/Carrinho/Carrinho";
+import Pagamento from "./pages/Pagamento/Pagamento";
+import Confirmacao from "./pages/Confirmacao/Confirmacao";
+import MeusAlugueis from "./pages/MeusAlugueis/MeusAlugueis";
+import EventoDetalhe from "./pages/Eventos/EventoDetalhe";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Rotas públicas */}
+          {/* 🔸 Rotas públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Rotas para usuários logados */}
+          {/* 🔸 Rotas para usuários logados */}
           <Route
             path="/eventos"
             element={
@@ -30,6 +35,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* 🔥 NOVA ROTA — Detalhe do Evento */}
+          <Route
+            path="/eventos/:id"
+            element={
+              <ProtectedRoute>
+                <EventoDetalhe />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/loja"
             element={
@@ -38,6 +54,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/produtos/:id"
             element={
@@ -47,7 +64,44 @@ function App() {
             }
           />
 
-          {/* Rotas apenas para admin */}
+          {/* 🔹 Sistema de aluguel e pagamento */}
+          <Route
+            path="/carrinho"
+            element={
+              <ProtectedRoute>
+                <Carrinho />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/pagamentos"
+            element={
+              <ProtectedRoute>
+                <Pagamento />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/confirmacao"
+            element={
+              <ProtectedRoute>
+                <Confirmacao />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/meus-alugueis"
+            element={
+              <ProtectedRoute>
+                <MeusAlugueis />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 🔸 Rotas apenas para admin */}
           <Route
             path="/admin"
             element={
@@ -56,6 +110,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/cadastrar-evento"
             element={
@@ -66,13 +121,14 @@ function App() {
           />
 
           <Route
-          path="/usuarios"
-          element={
-            <ProtectedRoute admin={true}>
-              <Usuarios />
-            </ProtectedRoute>
-             }
+            path="/usuarios"
+            element={
+              <ProtectedRoute admin={true}>
+                <Usuarios />
+              </ProtectedRoute>
+            }
           />
+
           <Route
             path="/cadastro-produto"
             element={

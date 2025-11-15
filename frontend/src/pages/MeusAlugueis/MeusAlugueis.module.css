@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #181310;
+  --panel: #241d18;
+  --wood: #3a2c20;
+  --gold: #d6b36a;
+  --gold-dark: #a48955;
+  --text: #f2e8d8;
+  --text-dark: #c8bba9;
+  --accent: #7f6850;
+  --shadow: 0 0 22px rgba(0,0,0,0.5);
+}
+
+.container {
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 40px;
+  color: var(--text);
+  font-family: "Spectral", serif;
+}
+
+.title {
+  text-align: center;
+  font-size: 34px;
+  margin-bottom: 35px;
+  color: var(--gold);
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* CARD */
+.item {
+  background: var(--panel);
+  border: 1px solid var(--gold-dark);
+  border-radius: 14px;
+  padding: 22px 26px;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, box-shadow .2s ease;
+  position: relative;
+}
+
+/* Detalhe superior em madeira */
+.item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: var(--wood);
+  border-radius: 14px 14px 0 0;
+}
+
+.item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px rgba(0,0,0,0.6);
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemInfo h4 {
+  margin: 0;
+  color: var(--gold);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.itemInfo span {
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+/* STATUS BONITOS */
+.status {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: .5px;
+  border: 1px solid rgba(0,0,0,0.4);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+  width: fit-content;
+}
+
+/* Aprovado (dourado suave) */
+.status.pago {
+  background: linear-gradient(to bottom, #e9d7a7, #cbb27a);
+  color: #4d3f25;
+}
+
+/* Pendente (um azul místico bem bonito) */
+.status.pendente {
+  background: linear-gradient(to bottom, #a7c4e9, #7fa4d4);
+  color: #1b2b44;
+}
+
+/* Cancelado (vinho elegante em vez de vermelho forte) */
+.status.cancelado {
+  background: linear-gradient(to bottom, #7a3b3b, #4e2222);
+  color: #f3e6d6;
+}

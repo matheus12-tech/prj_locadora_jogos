@@ -1,12 +1,29 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom'; // 👈 importa o Outlet
+import React, { useEffect, useState } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
+import axios from 'axios';
 import styles from './DashboardAdmin.module.css';
 
-
 export default function DashboardAdmin() {
-  const usuariosCount = 12;
-  const produtosCount = 34;
-  const eventosCount = 5;
+  const [usuariosCount, setUsuariosCount] = useState(0);
+  const [produtosCount, setProdutosCount] = useState(0);
+  const [eventosCount, setEventosCount] = useState(0);
+
+  useEffect(() => {
+    // 🔹 Pega a contagem real de usuários
+    axios.get('http://localhost:3000/usuarios')
+      .then(res => setUsuariosCount(res.data.length))
+      .catch(() => setUsuariosCount(0));
+
+    // 🔹 Pega a contagem real de produtos
+    axios.get('http://localhost:3000/produtos')
+      .then(res => setProdutosCount(res.data.length))
+      .catch(() => setProdutosCount(0));
+
+    // 🔹 Pega a contagem real de eventos
+    axios.get('http://localhost:3000/evento')
+      .then(res => setEventosCount(res.data.length))
+      .catch(() => setEventosCount(0));
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -17,6 +34,7 @@ export default function DashboardAdmin() {
           <NavLink to="/usuarios" className={({ isActive }) => isActive ? `${styles.link} ${styles.ativacao}` : styles.link}>Usuários</NavLink>
           <NavLink to="/loja" className={({ isActive }) => isActive ? `${styles.link} ${styles.ativacao}` : styles.link}>Produtos</NavLink>
           <NavLink to="/eventos" className={({ isActive }) => isActive ? `${styles.link} ${styles.ativacao}` : styles.link}>Eventos</NavLink>
+          <NavLink to="/" className={({ isActive }) => isActive ? `${styles.link} ${styles.ativacao}` : styles.link}>Ir para Home</NavLink>
         </nav>
       </aside>
 
@@ -29,10 +47,8 @@ export default function DashboardAdmin() {
           </div>
         </header>
 
-        {/* 👇 Aqui é onde será renderizado o conteúdo das rotas filhas */}
         <Outlet />
 
-        {/* Se quiser manter o resumo como padrão */}
         <section className={styles.cards}>
           <div className={styles.card}>
             <h2>Usuários</h2>

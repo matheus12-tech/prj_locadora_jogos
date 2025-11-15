@@ -1,158 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 :root {
-  --bg-dark: #171A21;
-  --bg-light: #1B1E29;
+  --bg-dark: #0f1115;
+  --bg-light: #1a1d25;
   --purple: #6C5CE7;
-  --white: #FFFFFF;
-  --gray: #A0A0A0;
+  --white: #ffffff;
+  --gray: #b3b3b3;
   --transition: 0.3s ease;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+
 .container {
-  display: flex;
+  min-height: 100vh;
   width: 100%;
-  min-height: 100vh;
-  background: var(--bg-dark);
-  color: var(--white);
-  font-family: Arial, sans-serif;
-}
-
-.sidebar {
-  width: 250px;
-  background: var(--bg-light);
-  padding: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-height: 100vh;
-  position: sticky;
-  top: 0;
-}
-
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.nav a {
-  display: block;
-  padding: 10px 0;
-  color: var(--gray);
-  text-decoration: none;
-  transition: var(--transition);
-  border-radius: 8px;
-  margin-bottom: 5px;
-}
-
-.nav a:hover {
-  color: var(--white);
-  background: var(--purple);
-  padding-left: 10px;
-}
-
-.main {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  background: linear-gradient(145deg, #0d0f14, #1a1d25, #14161c);
 }
 
-.usuario {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.overlay {
+  background-color: rgba(15, 17, 21, 0.85);
+  width: 100%;
+  padding: 2rem;
 }
 
-.avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-
-.voltarBtn {
-  padding: 8px 16px;
-  background: var(--purple);
-  color: var(--white);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.voltarBtn:hover {
-  transform: translateY(-2px);
-  background: #7c6df0;
-}
-
-.produtoDetalhe {
+.content {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: auto;
+  align-items: flex-start;
+  animation: fadeUp 0.6s ease-out;
 }
 
-.imagemContainer {
-  flex: 1 1 400px;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.imagemContainer img {
+.imagem {
+  flex: 1;
+  max-width: 480px;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 16px;
+  object-fit: contain;
+  box-shadow: 0 0 30px rgba(108, 92, 231, 0.4);
+  transition: transform var(--transition);
+}
+
+.imagem:hover {
+  transform: scale(1.04);
 }
 
 .info {
-  flex: 1 1 400px;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1.2rem;
+  color: var(--white);
 }
 
-.info h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-.descricao {
-  font-size: 16px;
-  color: var(--gray);
-}
-
-.preco,
-.categoria,
-.estoque {
+.nome {
+  font-size: 2.8rem;
   font-weight: bold;
 }
 
-.editarBtn {
-  margin-top: 10px;
-  padding: 10px 20px;
+.descricao {
+  font-size: 1.2rem;
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+.detalhes p {
+  font-size: 1.1rem;
+  margin: 0.2rem 0;
+}
+
+.preco {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--purple);
+  margin-top: 0.5rem;
+}
+
+.acoes {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.btnAlugar {
   background: var(--purple);
-  color: var(--white);
   border: none;
-  border-radius: 8px;
+  color: var(--white);
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: var(--transition);
 }
 
-.editarBtn:hover {
-  background: #7c6df0;
+.btnAlugar:hover {
+  background-color: #7d6cff;
   transform: translateY(-2px);
 }
 
-@media (max-width: 1024px) {
-  .produtoDetalhe {
+.btnVoltar {
+  background: transparent;
+  border: 2px solid var(--purple);
+  color: var(--white);
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: var(--transition);
+}
+
+.btnVoltar:hover {
+  background-color: var(--purple);
+}
+
+@media (max-width: 900px) {
+  .content {
     flex-direction: column;
-    align-items: center;
+    text-align: center;
   }
 
-  .imagemContainer,
-  .info {
-    flex: 1 1 100%;
+  .imagem {
+    max-width: 100%;
+  }
+
+  .acoes {
+    flex-direction: column;
+  }
+
+  .nome {
+    font-size: 2.2rem;
+  }
+
+  .preco {
+    font-size: 1.8rem;
   }
 }

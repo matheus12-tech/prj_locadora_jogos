@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const SECRET = "sua_chave_secreta";
+const SECRET = "secretkey";
 
 // Middleware para verificar se o usuário está logado
 export function verificarLogado(req, res, next) {

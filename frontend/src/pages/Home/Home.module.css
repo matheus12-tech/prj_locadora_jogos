@@ -185,6 +185,7 @@
   height: 150px;
   object-fit: cover;
   display: block;
+  background: #222;
 }
 
 .cardInfo {
