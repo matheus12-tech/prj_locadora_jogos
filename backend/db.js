@@ -7,7 +7,7 @@ try {
     host: 'localhost',
     user: 'root',
     password: 'bmln1213',
-    database: 'locadora_jogos_databaze',
+    database: 'locadora_jogos_database',
     port: 3307
   });
 

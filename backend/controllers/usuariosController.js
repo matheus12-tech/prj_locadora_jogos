@@ -10,7 +10,7 @@ export async function login(req, res) {
 
   try {
     const [rows] = await db.query(
-      "SELECT * FROM usuario_login WHERE email = ?",
+      "SELECT * FROM tb_login WHERE email = ?",
       [email]
     );
 
@@ -55,7 +55,6 @@ export async function login(req, res) {
 // ------------------- LISTAR USUÁRIOS -------------------
 export async function listarUsuarios(req, res) {
   try {
-    // Filtra pra não mostrar admin
     const [rows] = await db.query(
       `SELECT 
          u.id, 
@@ -64,8 +63,8 @@ export async function listarUsuarios(req, res) {
          u.role, 
          u.status,
          COUNT(a.id_advertencia) AS advertencias
-       FROM usuario_login u
-       LEFT JOIN advertencias a ON u.id = a.id_usuario
+       FROM tb_login u
+       LEFT JOIN tb_advertencias a ON u.id = a.id_usuario
        WHERE u.role != 'admin'
        GROUP BY u.id, u.nome, u.email, u.role, u.status`
     );
@@ -73,7 +72,7 @@ export async function listarUsuarios(req, res) {
     res.json(rows);
   } catch (err) {
     console.error("Erro ao listar usuários:", err);
-    res.status(500).json({ error: "Erro interno no servidor" });
+    res.status(500).json({ error: "Erro interno no servidor." });
   }
 }
 
@@ -84,7 +83,7 @@ export async function atualizarStatusUsuario(req, res) {
 
   try {
     const [result] = await db.query(
-      "UPDATE usuario_login SET status = ? WHERE id = ?",
+      "UPDATE tb_login SET status = ? WHERE id = ?",
       [status, id]
     );
 
@@ -107,7 +106,7 @@ export async function aplicarAdvertencia(req, res) {
 
   try {
     await db.query(
-      `INSERT INTO advertencias (id_usuario, id_aplicador, motivo)
+      `INSERT INTO tb_advertencias (id_usuario, id_aplicador, motivo)
        VALUES (?, ?, ?)`,
       [id, idAplicador, motivo]
     );

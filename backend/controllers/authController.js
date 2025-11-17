@@ -1,7 +1,8 @@
 import db from "../db.js";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const SECRET = "secretkey"; // troque para variável de ambiente em produção
+const SECRET = "secretkey"; // coloque no .env depois
 
 // ============================================================
 // 🧩 LOGIN (admin ou usuário comum)
@@ -14,9 +15,10 @@ export async function login(req, res) {
   }
 
   try {
-    const [rows] = await db.execute(
-      "SELECT * FROM usuario_login WHERE TRIM(LOWER(email)) = LOWER(?) AND TRIM(senha) = ?",
-      [email.trim(), senha.trim()]
+    // Busca usuário pelo e-mail
+    const [rows] = await db.query(
+      "SELECT * FROM tb_login WHERE LOWER(TRIM(email)) = LOWER(?)",
+      [email.trim()]
     );
 
     if (rows.length === 0) {
@@ -25,20 +27,31 @@ export async function login(req, res) {
 
     const usuario = rows[0];
 
-    // Cria o token JWT com id e role
+    // Compara a senha usando bcrypt
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaValida) {
+      return res.status(401).json({ error: "Informações de login incorretas." });
+    }
+
+    if (usuario.status === "banido") {
+      return res.status(403).json({ error: "Usuário banido." });
+    }
+
+    // Cria o token JWT
     const token = jwt.sign(
       { id: usuario.id, role: usuario.role },
       SECRET,
       { expiresIn: "8h" }
     );
 
-    // ⚡ Retorna id junto com token, nome e role
     res.status(200).json({
       id: usuario.id,
       nome: usuario.nome,
       role: usuario.role,
       token,
     });
+
   } catch (err) {
     console.error("Erro ao fazer login:", err);
     res.status(500).json({ error: "Erro interno no servidor." });
@@ -56,8 +69,9 @@ export async function cadastrarUsuario(req, res) {
   }
 
   try {
-    const [existing] = await db.execute(
-      "SELECT * FROM usuario_login WHERE email = ?",
+    // Verifica se usuário já existe
+    const [existing] = await db.query(
+      "SELECT * FROM tb_login WHERE email = ?",
       [email]
     );
 
@@ -65,12 +79,17 @@ export async function cadastrarUsuario(req, res) {
       return res.status(409).json({ error: "Email já cadastrado!" });
     }
 
-    await db.execute(
-      "INSERT INTO usuario_login (nome, email, senha, role) VALUES (?, ?, ?, ?)",
-      [nome, email, senha, "usuario"]
+    // Criptografa a senha
+    const senhaHash = await bcrypt.hash(senha, 10);
+
+    // Insere no banco
+    await db.query(
+      "INSERT INTO tb_login (nome, email, senha, role, status) VALUES (?, ?, ?, ?, ?)",
+      [nome, email, senhaHash, "usuario", "ativo"]
     );
 
     res.status(201).json({ message: "Usuário cadastrado com sucesso!" });
+
   } catch (err) {
     console.error("Erro ao cadastrar usuário:", err);
     res.status(500).json({ error: "Erro interno no servidor." });
@@ -86,17 +105,25 @@ export function verificarLogado(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
-  if (!token) return res.status(401).json({ error: "Token não fornecido." });
+  if (!token) {
+    return res.status(401).json({ error: "Token não fornecido." });
+  }
 
   jwt.verify(token, SECRET, (err, usuario) => {
-    if (err) return res.status(403).json({ error: "Token inválido." });
+    if (err) {
+      return res.status(403).json({ error: "Token inválido." });
+    }
     req.usuario = usuario;
     next();
   });
 }
 
-// Verifica se o usuário é administrador
+// Verifica se o usuário é admin
 export function verificarAdmin(req, res, next) {
+  if (!req.usuario) {
+    return res.status(401).json({ error: "Usuário não autenticado." });
+  }
+
   if (req.usuario.role === "admin") {
     next();
   } else {
