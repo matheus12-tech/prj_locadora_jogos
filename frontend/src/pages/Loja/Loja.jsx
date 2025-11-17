@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";   // ⬅ ADICIONADO NAVIGATE
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Loja.module.css";
@@ -8,7 +8,7 @@ import { listarCategorias } from "../../services/categoriasService";
 const BASE_URL = "http://localhost:3000";
 
 export default function Loja() {
-  const navigate = useNavigate(); // ⬅ NECESSÁRIO PARA ABRIR ProdutoDetalhe
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [categorias, setCategorias] = useState([]);
   const [produtos, setProdutos] = useState([]);
@@ -62,8 +62,7 @@ export default function Loja() {
           <NavLink to="/loja" className={({ isActive }) => (isActive ? styles.ativo : "")}>Loja</NavLink>
           <NavLink to="/eventos" className={({ isActive }) => (isActive ? styles.ativo : "")}>Eventos</NavLink>
           <NavLink to="/favoritos" className={({ isActive }) => (isActive ? styles.ativo : "")}>Favoritos</NavLink>
-
-          <NavLink to="/carrinho" className={({ isActive }) => (isActive ? styles.ativo : "")}>Carrinho</NavLink>
+        
         </nav>
       </aside>
 
@@ -84,7 +83,7 @@ export default function Loja() {
           <div className={styles.bannerContent}>
             <h1>Ofertas Imperdíveis!</h1>
             <p>Descubra os jogos mais quentes do mês com até 50% de desconto!</p>
-            <button onClick={() => navigate("/loja")}>Ver Promoções</button>
+            {/* Botão "Ver Promoções" removido */}
           </div>
           <img src="https://via.placeholder.com/500x250" alt="banner" />
         </section>
@@ -129,7 +128,7 @@ export default function Loja() {
               <div 
                 key={p.id_produto} 
                 className={styles.card}
-                onClick={() => navigate(`/produtos/${p.id_produto}`)}   // ⬅ CARD ABRE DETALHE
+                onClick={() => navigate(`/produtos/${p.id_produto}`)}
               >
                 <img
                   src={getImagemUrl(p.imagem)}
@@ -143,12 +142,12 @@ export default function Loja() {
                   <p>Categoria: {p.nome_categoria}</p>
                 </div>
 
-                {/* Botão Comprar = vai para DETALHE */}
+                {/* Botão Comprar */}
                 <button
                   className={styles.btnComprar}
                   onClick={(e) => {
-                    e.stopPropagation();  // evita clicar no card inteiro
-                    navigate(`/produtos/${p.id_produto}`);  // ⬅ COMO COMBINAMOS
+                    e.stopPropagation();
+                    navigate(`/produtos/${p.id_produto}`);
                   }}
                 >
                   Comprar

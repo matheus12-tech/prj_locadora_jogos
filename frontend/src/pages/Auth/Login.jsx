@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { loginUser } from "../../services/loginService";
-import styles from "./Auth.module.css";
+import styles from "./Login.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,10 +15,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const data = await loginUser(email, senha);
-
-      // ⚡ id já convertido em número dentro do loginUser
       login(data);
-
       if (data.role === "admin") {
         navigate("/admin");
       } else {
@@ -49,6 +46,12 @@ export default function Login() {
           required
         />
         <button type="submit">Entrar</button>
+        <p className={styles.textoCadastro}>
+          Não tem conta?{" "}
+          <NavLink to="/cadastrar" className={styles.linkCadastro}>
+            Cadastre-se
+          </NavLink>
+        </p>
       </form>
     </div>
   );

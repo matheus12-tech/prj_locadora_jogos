@@ -4,195 +4,97 @@
   --bg-dark: #171A21;
   --bg-light: #1B1E29;
   --purple: #6C5CE7;
+  --purple-light: #7c6df0;
   --white: #FFFFFF;
   --gray: #A0A0A0;
   --transition: 0.3s ease;
+  --card-shadow: rgba(0, 0, 0, 0.5);
 }
 
 /* Container principal */
 .container {
   display: flex;
-  width: 100%;
-  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
   background: var(--bg-dark);
   color: var(--white);
   font-family: 'Roboto', sans-serif;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 250px;
-  background: var(--bg-light);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
   min-height: 100vh;
-  position: sticky;
-  top: 0;
+  padding: 2rem;
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 30px;
+/* Título */
+.container h1 {
   color: var(--purple);
+  margin-bottom: 2rem;
+  font-size: 28px;
+  text-align: center;
 }
 
-.nav a {
-  display: block;
-  padding: 12px 10px;
-  color: var(--gray);
-  text-decoration: none;
-  transition: var(--transition);
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-.nav a:hover,
-.nav .ativo {
-  color: var(--white);
-  background: var(--purple);
-  padding-left: 15px;
-  font-weight: bold;
-}
-
-/* Main area */
-.main {
-  flex: 1;
-  padding: 20px;
+/* Formulário */
+.form {
+  background: var(--bg-light);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 12px var(--card-shadow);
 }
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-}
-
-.pesquisar {
-  background: var(--bg-light);
-  border: none;
-  padding: 10px 15px;
+/* Inputs e textarea */
+.form input,
+.form textarea {
+  background: var(--bg-dark);
+  border: 1px solid var(--purple);
   border-radius: 8px;
+  padding: 0.8rem;
   color: var(--white);
-  width: 300px;
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
 }
 
-.usuario {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.form input:focus,
+.form textarea:focus {
+  border-color: var(--purple-light);
+  box-shadow: 0 0 6px var(--purple-light);
 }
 
-.avatar {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
+/* Textarea altura maior */
+.form textarea {
+  min-height: 80px;
+  resize: vertical;
 }
 
-/* Banner */
-.banner {
-  background: linear-gradient(135deg, #6C5CE7, #341f97);
-  border-radius: 12px;
-  padding: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 35px;
+/* Botões */
+.botao {
+  background: var(--purple);
   color: var(--white);
-}
-
-.bannerContent h1 {
-  font-size: 26px;
-  margin-bottom: 10px;
-}
-
-.bannerContent p {
-  margin-bottom: 20px;
-  color: var(--white);
-}
-
-.bannerContent button {
-  padding: 12px 25px;
-  background: var(--white);
-  color: var(--purple);
   border: none;
+  padding: 0.9rem;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
   transition: var(--transition);
 }
 
-.bannerContent button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Eventos */
-.eventos h2 {
-  margin-bottom: 20px;
-}
-
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.card {
-  background: var(--bg-light);
-  border-radius: 12px;
-  padding: 15px;
-  width: 250px;
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.cardInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+.botao:hover {
+  background: var(--purple-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--card-shadow);
 }
 
 /* Responsividade */
-@media (max-width: 1024px) {
-  .sidebar {
-    display: none;
-  }
-
-  .banner {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .cards {
-    justify-content: center;
-  }
-}
-
 @media (max-width: 768px) {
-  .pesquisar {
+  .form {
     width: 100%;
+    padding: 1.5rem;
   }
 
-  .cards {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .bannerContent h1,
-  .bannerContent p {
-    text-align: center;
+  .container h1 {
+    font-size: 24px;
   }
 }

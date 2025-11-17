@@ -6,9 +6,9 @@ try {
   connection = await mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'bmln1213',
-    database: 'locadora_jogos_database',
-    port: 3307
+    password: '',
+    database: 'locadora_jogos_databazee',
+    port: 3306
   });
 
   console.log('Conectado ao banco de dados com sucesso!');

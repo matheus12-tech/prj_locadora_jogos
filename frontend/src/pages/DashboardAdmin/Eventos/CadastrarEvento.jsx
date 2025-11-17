@@ -28,7 +28,7 @@ export default function CadastrarEvento() {
 
     try {
       await axios.post(
-        `${BASE_URL}/evento`,
+        `${BASE_URL}/eventos`,
         eventoForm,
         {
           headers: {

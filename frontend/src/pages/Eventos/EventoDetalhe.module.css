@@ -1,10 +1,9 @@
 :root {
-  --bg: #181310;
-  --panel: #241d18;
-  --wood: #3a2c20;
-  --gold: #d6b36a;
-  --text: #f2e8d8;
-  --text-dark: #c8bba9;
+  --bg: #1B1E29;          /* fundo principal escuro */
+  --panel: #24283B;       /* painel do card */
+  --accent: #6C5CE7;      /* destaque / botões */
+  --text: #E0E0E0;        /* texto principal */
+  --text-dark: #A0A0A0;   /* texto secundário */
 }
 
 .container {
@@ -18,10 +17,15 @@
 .voltar {
   background: none;
   border: none;
-  color: var(--gold);
+  color: var(--accent);
   font-size: 18px;
   cursor: pointer;
   margin-bottom: 20px;
+  transition: 0.2s;
+}
+
+.voltar:hover {
+  opacity: 0.8;
 }
 
 .card {
@@ -30,7 +34,7 @@
   max-width: 700px;
   padding: 25px;
   border-radius: 16px;
-  border: 1px solid var(--gold);
+  border: 1px solid var(--accent);
   box-shadow: 0 0 25px rgba(0,0,0,0.6);
 }
 
@@ -39,14 +43,14 @@
   height: 300px;
   object-fit: cover;
   border-radius: 12px;
-  border: 2px solid var(--gold);
+  border: 2px solid var(--accent);
 }
 
 .title {
   text-align: center;
   font-size: 32px;
   margin-top: 20px;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .desc {
@@ -57,33 +61,34 @@
 
 .info {
   margin-top: 20px;
-  background: rgba(0,0,0,0.2);
+  background: rgba(255, 255, 255, 0.05);
   padding: 15px;
   border-radius: 10px;
   line-height: 28px;
+  color: var(--text);
 }
 
 .botao {
   margin-top: 25px;
   width: 100%;
   padding: 15px;
-  background: var(--gold);
-  color: #3d2f16;
+  background: var(--accent);
+  color: #fff;
   border: none;
   font-size: 18px;
   border-radius: 10px;
   cursor: pointer;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .botao:hover {
-  background: #f0d69c;
+  background: #8c7df3;
 }
 
 .loading,
 .error {
   text-align: center;
-  color: var(--gold);
+  color: var(--accent);
   font-size: 20px;
   margin-top: 60px;
 }

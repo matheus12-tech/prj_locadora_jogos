@@ -59,10 +59,6 @@ export default function Home() {
             )}
           </nav>
         </div>
-
-        <div className={styles.desconto}>
-          <p>Faça seu primeiro aluguel com 20%</p>
-        </div>
       </aside>
 
       {/* Main */}
@@ -91,7 +87,6 @@ export default function Home() {
             <p>Explore consoles, jogos e acessórios incríveis. Bem-vindo à sua loja gamer!</p>
             <button onClick={() => navigate("/loja")}>Ver Promoções</button>
           </div>
-          <div className={styles.bannerImg}></div>
         </section>
 
         {/* Seções */}

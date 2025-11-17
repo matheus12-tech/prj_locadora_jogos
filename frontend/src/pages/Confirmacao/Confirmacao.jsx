@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import styles from "./Confirmacao.module.css";
 
 export default function Confirmacao() {
   const { state } = useLocation();

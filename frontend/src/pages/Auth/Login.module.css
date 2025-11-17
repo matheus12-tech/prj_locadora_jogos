@@ -1,0 +1,91 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+:root {
+  --bg-dark: #1b1e29;
+  --bg-form: #242832;
+  --purple: #6C5CE7;
+  --white: #FFFFFF;
+  --gray: #A0A0A0;
+  --red: #ff6b6b;
+  --transition: 0.3s ease;
+}
+
+/* Container principal */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--bg-dark);
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Formulário */
+.form {
+  background: var(--bg-form);
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 400px;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: var(--transition);
+}
+
+.form h2 {
+  text-align: center;
+  color: var(--purple);
+  margin-bottom: 10px;
+}
+
+.form input {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--gray);
+  background: #1f2230;
+  color: var(--white);
+  font-size: 16px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.form input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 8px rgba(108, 92, 231, 0.5);
+}
+
+.form button {
+  padding: 12px 15px;
+  background: var(--purple);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition);
+}
+
+.form button:hover {
+  background: #5930d1;
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.erro {
+  color: var(--red);
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: -10px;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .form {
+    padding: 30px 20px;
+  }
+}
